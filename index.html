@@ -78,7 +78,7 @@
         }
     </style>
     <script>
-        // klasa lokalizacji
+        // locations class
         class Location {
             constructor(position, description, img_file, bg_color, available_directions, items) {
                 this.position = position;
@@ -105,7 +105,7 @@
                 return this.count;
             }
         }
-        // gra
+        // game - generating locations
         game = {
             // lokalizacje
             locations: [
@@ -164,7 +164,7 @@
                     new Location("67", "You are in a deep forest", "data/img/27_i_67.gif", "rgb(140, 253, 99)", "W", [])
                 ]
             ],
-            // itemy
+            // generating items
             items: [
                 undefined,
                 undefined,
@@ -205,7 +205,7 @@
                 { id: 36, changedName: "a PRIZE", flag: 1, name: "PRIZE" },
                 { id: 37, changedName: "a SHEEP", flag: 1, name: "SHEEP" },
             ],
-            // zaleznosci
+            // dependences between locations and items
             dependences: [
                 { usedItem: 10, location: "45", createdItem: 11, loc: "", comment: "You opened a tool shed and took an axe", progress: 0 },
                 { usedItem: 11, location: "56", createdItem: 12, loc: "", comment: "You cut sticks for sheeplegs", progress: 0 },
@@ -228,13 +228,13 @@
                 { usedItem: 35, location: "30", createdItem: 36, loc: "", comment: "The King is impressed by your shoes", progress: 0 },
                 { usedItem: 36, location: "", createdItem: 0, loc: "", comment: "finish", progress: 0 },
             ],
-            // dane i funkcje gracza
+            // players data and functions
             player: {
                 pos_x: 7,
                 pos_y: 4,
                 heldItem: "nothing",
                 progress: 0,
-                // poruszanie sie
+                // moving function
                 move: function (direction) {
                     var dirs = game.locations[game.player.pos_y - 1][game.player.pos_x - 1].available_directions;
                     if (dirs.search(direction) != -1) {
@@ -268,7 +268,7 @@
                         document.getElementById("com").innerHTML = "You can't go that way";
                     }
                 },
-                // podnoszenie przedmiotu
+                // taking items function
                 take: function (item) {
                     var names = game.locations[game.player.pos_y - 1][game.player.pos_x - 1].toName();
                     if (names.includes(item) == true) {
@@ -291,7 +291,7 @@
                     }
                     else document.getElementById("com").innerHTML = "There isn't anything like that here";
                 },
-                // odkladanie przedmiotu
+                // dropping items function
                 drop: function (item) {
                     if (game.locations[game.player.pos_y - 1][game.player.pos_x - 1].countItems() >= 3) document.getElementById("com").innerHTML = "You can't store any more here";
                     else if (item == game.player.heldItem) {
@@ -305,7 +305,7 @@
                     else if ("nothing" == game.player.heldItem) document.getElementById("com").innerHTML = "You are not carrying anything";
                     else document.getElementById("com").innerHTML = "You are not carrying it";
                 },
-                // uzycie przedmiotu
+                // using items function
                 use: function (item) {
                     if (item == game.player.heldItem) {
                         var loc = (game.player.pos_y - 1) + "" + (game.player.pos_x - 1);
@@ -356,7 +356,7 @@
                     }
                     else { document.getElementById("com").innerHTML = "You aren't carrying anything like that"; game.timeout(1000); }
                 },
-                // wyswietlenie polecen
+                // show vocabulery
                 vocabulary: function () {
                     document.getElementById("direction").innerHTML = "NORTH or N, SOUTH or S<br>" +
                         "WEST or W, EAST or E<br>" +
@@ -371,7 +371,7 @@
                     input.value = "";
                     game.keys = true;
                 },
-                // wyswietlenie podpowiedzi
+                // show gossips
                 gossips: function () {
                     document.getElementById("direction").innerHTML = "The  woodcutter lost  his home key...<br>" +
                         "The butcher likes fruit... The cooper<br>" +
@@ -390,9 +390,9 @@
                     document.getElementById("com").innerHTML = "Try another word or V for vocabulary";
                 }
             },
-            // czy smok nie zyje
+            // checking if dragon died
             deadDragon: false,
-            // wyswietlanie lokalizacji
+            // rendering locations
             renderLocation: function () {
                 var location = game.locations[game.player.pos_y - 1][game.player.pos_x - 1];
                 document.getElementById("description").innerHTML = location.description;
@@ -410,7 +410,7 @@
                 document.getElementById("hold").innerHTML = "You are carrying " + game.player.heldItem;
                 document.getElementById("com").innerHTML = "What's now?";
                 game.finish();
-                // focus na inpucie
+                // focus on input
                 window.addEventListener('mousemove', () => {
                     document.getElementById("input").focus();
 
@@ -420,9 +420,9 @@
 
                 })
             },
-            // zmienna do gossips oraz vocabulary - wylaczenie timeoutu
+            // variable for gossipis and vocabulary - remove timeout
             keys: false,
-            // input gracza
+            // players input
             inputValue: function (e) {
                 var input = document.getElementById("input");
                 if (game.keys == false) {
@@ -474,7 +474,7 @@
                     game.renderLocation();
                 }
             },
-            // wyswietlanie lokalizacji
+            // display available directions
             displayDirections: function (location) {
                 var dirs = location.available_directions;
                 var displayDirs = "";
@@ -501,7 +501,7 @@
                 }
                 document.getElementById("direction").innerHTML = "You can go " + displayDirs;
             },
-            // wyswietlanie przedmiotów na lokalizacji
+            // display items on locations
             itemOnLocation: function () {
                 var item = game.locations[game.player.pos_y - 1][game.player.pos_x - 1].items;
                 if (item.length == 0) {
@@ -516,7 +516,7 @@
                     return items;
                 }
             },
-            // render lokalizacji po okreslonym czasie
+            // renedr location after declared time
             timeout: function (time) {
                 input.value = "";
                 setTimeout(() => {
@@ -524,6 +524,7 @@
                 }, time);
 
             },
+            // render compass
             compass: function (dirs) {
                 if (document.getElementById("cmp") == undefined) {
                     var cmp = document.createElement("img");
@@ -572,6 +573,7 @@
                 if (dirs.includes("E")) document.getElementById("e").style.zIndex = "1";
                 if (dirs.includes("W")) document.getElementById("w").style.zIndex = "1";
             },
+            //checking if player has aal of the items for sheep
             sheep: function () {
                 if (game.player.progress == 6) {
                     setTimeout(() => {
@@ -591,6 +593,7 @@
                     }, 1000);
                 }
             },
+            // ending
             finish: function () {
                 if (game.player.heldItem == "PRIZE") {
                     document.getElementById("game").innerHTML = "KONIEC GRY";
@@ -605,7 +608,7 @@
             }
         }
 
-
+        // intro 
         let start = 0;
         function intro() {
             if (start == 0) {
